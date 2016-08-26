@@ -1,0 +1,15 @@
+- name: "Update all packages"
+  include: update-packages.yml
+
+- name: "Install Random Number Generator"
+  include:  install-rngd.yml
+
+- name: "Start reboot sequence"
+  include: async-reboot.yml
+
+- name: "Install package dependancies"
+  include: install-ipa-server.yml
+
+- name: "Install scripts"
+  include: write-install-script.yml
+  tags:  script

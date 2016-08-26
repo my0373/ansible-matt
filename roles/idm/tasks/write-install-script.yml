@@ -1,0 +1,9 @@
+---
+  - name: Create scripts directory
+    file: path=/root/scripts state=directory
+
+
+  - name: Writing IDM install script to disk
+    template: src=install-idm.sh dest=/root/scripts/install-idm.sh owner=root group=wheel mode=0755
+
+
