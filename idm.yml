@@ -1,0 +1,83 @@
+---
+- hosts: idm
+  vars:
+    inventory_hostname: idm.myork
+    rhn_account_number: 5652130
+    rhsm_hostname: subscription.rhn.redhat.com
+    rhsm_pool: '^Employee SKU$'
+
+  vars_prompt:
+    - name: "rhsm_username"
+      prompt: "Please enter your RHN Username"
+      private: no
+
+    - name: "rhsm_password"
+      prompt:  "Please enter your RHN password"
+      private: yes
+
+  tasks:
+    - name: Set the hostname of the IDM server
+      hostname: name={{ inventory_hostname }}
+      tags:
+      - configuration
+
+    - redhat_subscription: state=absent
+      tags:
+      - subscription
+    - shell: /usr/sbin/subscription-manager clean
+      tags:
+      - subscription
+    - redhat_subscription: state=present
+                           server_hostname={{ rhsm_hostname }}
+                           autosubscribe=yes
+                           pool={{ rhsm_pool }}
+                           username={{ rhsm_username }}
+                           password={{ rhsm_password }}
+
+      tags:
+      - subscription
+    - shell: /usr/sbin/subscription-manager repos --disable=*
+      tags:
+      - subscription
+    - shell: /usr/sbin/subscription-manager repos --enable=rhel-7-server-rpms
+      tags:
+      - subscription
+    - shell: echo "======= Standard MOTD file =======" > /etc/motd
+      tags:
+      - configuration
+    - name: "Install Common RPMS"
+      yum: state=present name={{ item }}
+      with_items:
+      - bash-completion
+      - tcpdump
+      - vim
+      - tree
+      - chrony
+      tags:
+      - packages
+    - service: name=chronyd state=started enabled=yes
+      tags:
+      - services
+    - user: name=myork comment="Matt York" uid=1039 group=users
+      tags:
+      - configuration
+    - lineinfile: dest=/etc/selinux/config regexp=^SELINUX= line=SELINUX=permissive
+      tags:
+      - selinux
+
+    - name: restart machine
+      command: shutdown -r now "Ansible updates triggered"
+      async: 0
+      poll: 0
+      ignore_errors: true
+      tags:
+      - selinux
+
+
+
+    - name: Wait for Server to Restart
+      local_action: wait_for host={{ ansible_ssh_host }} state=started                         port=22                         delay=30                         timeout=300                         connect_timeout=15
+
+      sudo: false
+      tags:
+      - selinux
