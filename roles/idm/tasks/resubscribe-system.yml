@@ -1,0 +1,17 @@
+---
+  - name: "Unregister server"
+    redhat_subscription: state=absent
+
+
+  - name: "Clean subscriptions"
+    shell: /usr/sbin/subscription-manager clean
+    become: yes
+
+
+  - name: "Register server"
+    redhat_subscription: state=present
+                         server_hostname={{ rhsm_hostname }}
+                         autosubscribe=yes
+                         pool={{ rhsm_pool }}
+                         username={{ rhsm_username }}
+                         password={{ rhsm_password }}

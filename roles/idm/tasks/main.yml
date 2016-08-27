@@ -1,3 +1,6 @@
+- name: "Re-register system"
+  include: resubscribe-system.yml
+
 - name: "Update all packages"
   include: update-packages.yml
 

@@ -20,21 +20,7 @@
       tags:
       - configuration
 
-    - redhat_subscription: state=absent
-      tags:
-      - subscription
-    - shell: /usr/sbin/subscription-manager clean
-      tags:
-      - subscription
-    - redhat_subscription: state=present
-                           server_hostname={{ rhsm_hostname }}
-                           autosubscribe=yes
-                           pool={{ rhsm_pool }}
-                           username={{ rhsm_username }}
-                           password={{ rhsm_password }}
 
-      tags:
-      - subscription
     - shell: /usr/sbin/subscription-manager repos --disable=*
       tags:
       - subscription

@@ -1,8 +1,12 @@
 #!/usr/bin/bash
 ipa-server-install \
-	--no-forwarders  \
 	{% if setup_dns %}
 	--setup-dns  \
+	{% endif %}
+	{% if use_dns_forwarders %}
+    --forwarder {{ dns_forwarder_ip }}  \
+	{% else %}
+	--no-forwarders  \
 	{% endif %}
 	--ds-password {{ idm_ds_password }}  \
 	--admin-password {{ idm_admin_password }}  \

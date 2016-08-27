@@ -1,6 +1,4 @@
 ---
-
-
 - hosts: idm
   vars:
     idm_ds_password:  "SuperSecretPassword123"
@@ -10,8 +8,26 @@
     hostname: "test"
     reversename: "200.168.192.in-addr.arpa."
     ip_address: "192.168.200.2"
+    inventory_hostname: idm.myork
+    rhsm_hostname: subscription.rhn.redhat.com
+    rhsm_pool: '^Employee SKU$'
+
     # If se to no then the dns will not be configured
     setup_dns: no
+
+    # User DNS forwarders
+    use_dns_forwarders: no
+    dns_forwarder_ip: 192.168.200.1
+
+
+  vars_prompt:
+    - name: "rhsm_username"
+      prompt: "Please enter your RHN Username"
+      private: no
+
+    - name: "rhsm_password"
+      prompt:  "Please enter your RHN password"
+      private: yes
 
   roles:
      - role:  idm
