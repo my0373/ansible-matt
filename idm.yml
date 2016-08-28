@@ -3,17 +3,17 @@
   vars:
     idm_ds_password:  "SuperSecretPassword123"
     idm_admin_password: "SuperSecretPassword123"
-    realm:  "myrealm"
-    domain: "mydomain"
-    hostname: "test"
+    realm:  "myork"
+    domain: "myork"
+    hostname: "idm"
     reversename: "200.168.192.in-addr.arpa."
-    ip_address: "192.168.200.2"
+    ip_address: "192.168.200.23"
     inventory_hostname: idm.myork
     rhsm_hostname: subscription.rhn.redhat.com
     rhsm_pool: '^Employee SKU$'
 
     # If se to no then the dns will not be configured
-    setup_dns: no
+    setup_dns: yes
 
     # User DNS forwarders
     use_dns_forwarders: no
